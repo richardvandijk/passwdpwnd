@@ -7,6 +7,7 @@
 import requests
 import hashlib
 import getpass
+import SecureString
 
 api_url_base = 'https://api.pwnedpasswords.com/range/'
 
@@ -17,6 +18,7 @@ headers = {'Content-Type': 'application/text',
 # ask for password and hash it with sha1           
 password = getpass.getpass('Please enter a password: ').encode('utf-8')
 hash_object = hashlib.sha1(password)
+SecureString.clearmem(password)
 hashed_pass = hash_object.hexdigest()
 
 # API call with first 5 characters from hash_password
