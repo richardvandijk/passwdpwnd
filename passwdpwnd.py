@@ -1,38 +1,47 @@
-# 
+"Python script to test password against known passwordleaks published at HIBP."
 
 # dependencies
-import requests
 import hashlib
 import getpass
+import requests
 import SecureString
 
-api_url_base = 'https://api.pwnedpasswords.com/range/'
+API_URL_BASE = 'https://api.pwnedpasswords.com/range/'
+HEADERS = {'Content-Type': 'application/text',
+           'User-Agent': 'passwdpwnd.py'}
+PREFIX_LEN = 5
 
-headers = {'Content-Type': 'application/text',
-           'User-Agent': 'Check-for-pyscript'}
+# ask for password and hash it with sha1
+PASSWORD = getpass.getpass('Please enter a password: ').encode('utf-8')
+HASH_OBJECT = hashlib.sha1(PASSWORD)
+SecureString.clearmem(PASSWORD)
+HASHED_PASS = HASH_OBJECT.hexdigest()
 
 
-# ask for password and hash it with sha1           
-password = getpass.getpass('Please enter a password: ').encode('utf-8')
-hash_object = hashlib.sha1(password)
-SecureString.clearmem(password)
-hashed_pass = hash_object.hexdigest()
-
-# API call with first 5 characters from hashed_pass
 def password_check():
-	api_url = format(api_url_base)+format(hashed_pass[:5].upper())
-	response = requests.get(api_url, headers=headers)
-	
-	if response.status_code != 200:
-		return response.status_code
-	
-	if response.status_code == 200:
-		return response.content.decode('utf-8')
-		    
-hashes = password_check()
+    "API call with first 5 characters from hashed_pass"
 
-# convert text result to dictonary by splitting it on ':'
-hash_dict = dict(item.split(':') for item in hashes.split())
+    api_url = format(API_URL_BASE)+format(HASHED_PASS[:PREFIX_LEN].upper())
+    response = requests.get(api_url, headers=HEADERS)
 
-print(hashed_pass[5:].upper() in hash_dict, hash_dict[hashed_pass[5:].upper()])
-hash_dict = ()
+    if response.status_code == 200:
+        return response.content.decode('utf-8')
+
+
+HASHES = password_check()
+
+if HASHES is not None:
+
+    # convert text result to dictonary by splitting it on ':'
+    HASH_DICT = dict(item.split(':') for item in HASHES.split())
+    if HASHED_PASS[PREFIX_LEN:].upper() in HASH_DICT:
+        print("[+] Found password in HIBP: " \
+            + str(HASH_DICT[HASHED_PASS[PREFIX_LEN:].upper()]) + " times")
+    else:
+        print("[-] Password not found in HBIP!")
+
+    # clear hash_dict
+    HASH_DICT = ()
+
+else:
+    print("[!] Request failed")
