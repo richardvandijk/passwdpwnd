@@ -1,9 +1,6 @@
-# python3 only
-# returns True if in dictonary & number of times
+# 
 
-# todo:
-# handling of response.status_code = 404
-
+# dependencies
 import requests
 import hashlib
 import getpass
@@ -21,7 +18,7 @@ hash_object = hashlib.sha1(password)
 SecureString.clearmem(password)
 hashed_pass = hash_object.hexdigest()
 
-# API call with first 5 characters from hash_password
+# API call with first 5 characters from hashed_pass
 def password_check():
 	api_url = format(api_url_base)+format(hashed_pass[:5].upper())
 	response = requests.get(api_url, headers=headers)
@@ -38,3 +35,4 @@ hashes = password_check()
 hash_dict = dict(item.split(':') for item in hashes.split())
 
 print(hashed_pass[5:].upper() in hash_dict, hash_dict[hashed_pass[5:].upper()])
+hash_dict = ()
