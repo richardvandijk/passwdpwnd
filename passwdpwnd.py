@@ -35,8 +35,8 @@ if HASHES is not None:
     # convert text result to dictonary by splitting it on ':'
     HASH_DICT = dict(item.split(':') for item in HASHES.split())
     if HASHED_PASS[PREFIX_LEN:].upper() in HASH_DICT:
-        print("[+] Found password in HIBP: " \
-            + str(HASH_DICT[HASHED_PASS[PREFIX_LEN:].upper()]) + " times")
+        print("[+] Found password in HIBP: " + str(HASHED_PASS) \
+            + " " + str(HASH_DICT[HASHED_PASS[PREFIX_LEN:].upper()]) + " times")
     else:
         print("[-] Password not found in HBIP!")
 
