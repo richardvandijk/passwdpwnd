@@ -33,7 +33,7 @@ HASHES = password_check()
 
 if HASHES is not None:
 
-    # convert text result to dictonary by splitting it on ':'
+    # convert text result to dictionary by splitting it on ':'
     HASH_DICT = dict(item.split(':') for item in HASHES.split())
     if HASHED_PASS[PREFIX_LEN:].upper() in HASH_DICT:
         print (info("Found password in HIBP: " \
