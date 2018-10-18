@@ -6,9 +6,8 @@ Python script to test if your password is pwnd. Test your password against the \
 
 * requests
 * getpass
-* hashlib
 * SecureString
-* hue
+* huepy
 
 ## Inner workings
 
